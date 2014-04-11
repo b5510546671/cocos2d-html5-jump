@@ -89,18 +89,26 @@ var Jumper = cc.Sprite.extend({
         
         this.checkOverBound();
     },
+    
+    travelUp: function() {
+        this.vy = this.jumpV;
+        this.y = this.ground.getTopY() + this.vy;
+        this.ground = null;
+    },
+    
+    travelDown: function() {
+        this.vy += this.g;
+        this.y += this.vy;
+    },
 
     updateYMovement: function() {
         if ( this.ground ) {
             this.vy = 0;
             if ( this.jump ) {
-                this.vy = this.jumpV;
-                this.y = this.ground.getTopY() + this.vy;
-                this.ground = null;
+                this.travelUp();
             }
         } else {
-            this.vy += this.g;
-            this.y += this.vy;
+            this.travelDown();   
         }
     },
 
