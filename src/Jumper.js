@@ -55,24 +55,39 @@ var Jumper = cc.Sprite.extend({
 
         this.updateSpritePosition();
     },
-
-    updateXMovement: function() {
-        if ( this.ground ) {
-            if ( ( !this.moveLeft ) && ( !this.moveRight ) ) {
-                this.autoDeaccelerateX();
-            } else if ( this.moveRight ) {
-                this.accelerateX( 1 );
-            } else {
-                this.accelerateX( -1 );
-            }
+    
+    isStill: function(){
+        return ( !this.moveLeft ) && ( !this.moveRight );
+    },
+    
+    increaseAcceleration: function(){
+        if ( this.moveRight ) {
+            this.accelerateX( 1 );
+        } else {
+            this.accelerateX( -1 );
         }
-        this.x += this.vx;
+    },
+    
+    checkOverBound: function(){
         if ( this.x < 0 ) {
             this.x += screenWidth;
         }
         if ( this.x > screenWidth ) {
             this.x -= screenWidth;
         }
+    },
+    
+    updateXMovement: function() {
+        if ( this.ground ) {
+            if ( this.isStill() ) {
+                this.autoDeaccelerateX();
+            } else{
+                this.increaseAcceleration();
+            }
+        }
+        this.x += this.vx;
+        
+        this.checkOverBound();
     },
 
     updateYMovement: function() {
